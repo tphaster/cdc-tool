@@ -1,0 +1,103 @@
+
+\documentclass[a4paper,12pt]{article}
+\usepackage{latexsym}
+\usepackage{amsfonts}
+\usepackage{relsize}
+\usepackage{indentfirst}
+\usepackage[MeX]{polski}
+\usepackage[latin2]{inputenc}
+\usepackage[polish]{babel}
+
+\title{
+    \textbf{Zaawansowane programowanie w C++ \\ Projekt} \\
+    {\normalsize<<Narzêdzie do znajdowania cyklicznych zale¿no¶ci pomiêdzy plikami>>}
+}
+
+\author{
+    \makebox[20ex][c]{Tomasz Pieczerak} \and
+    \makebox[20ex][c]{Maciej Rubikowski}
+}
+
+\addtolength{\oddsidemargin}{-.3in}
+\addtolength{\evensidemargin}{-.3in}
+\addtolength{\textwidth}{0.6in}
+\addtolength{\topmargin}{-.75in}
+\addtolength{\textheight}{1.5in}
+
+\begin{document}
+\maketitle
+
+\section{Tre¶æ zadania}
+W wybranym katalogu, zawieraj±cym kod ¼ród³owy w C/C++ wyszukiwaæ poleceñ
+preprocesora \verb|#include "nazwa"| i na ich podstawie zbudowaæ graf
+(skierowany) zale¿no¶ci pomiêdzy plikami. Je¿eli graf zawiera cykle to
+wygenerowaæ odpowiedni komunikat.
+
+Sugestia: wykorzystaæ bibliotekê \emph{boost graph library}.
+
+\section{Interpretacja}
+
+\paragraph{Analiza wstêpna}\
+
+Nale¿y zbudowaæ program o wsadowym charakterze dzia³ania, wywo³ywany z linii
+poleceñ z jednym (pomijaj±c opcje uruchomienia) parametrem -- g³ównym
+katalogiem projektu C/C++, zostanie on przeszukany celem lokalizacji plików
+¼ród³owych jêzyka C/C++, a nastêpnie analizy znajduj±cych siê w nich dyrektyw
+preprocesora \verb|#include|. Wynikiem tej¿e bêdzie zbudowanie grafu
+zale¿no¶ci miêdzy plikami, na podstawie którego program bêdzie móg³ odszukaæ
+ewentualne cykliczne zale¿no¶ci. W przypadku ich wyst±pienia u¿ytkownik
+zostanie o tym poinformowany stosownym komunikatem wskazuj±cym odszukan±
+zale¿no¶æ.
+
+\paragraph{Wymagania funkcjonalne}\
+
+Obs³uga programu sprowadzaæ siê bêdzie do uruchomienia go z linii poleceñ z
+odpowiednimi parametrami. Konieczne zatem jest zdefiniowanie formatu
+wywo³ania programu oraz dostêpnych opcji -- powinno byæ to zgodne z przyjêt±
+konwencj± dla docelowego systemy operacyjnego. Format wywo³ania programu
+bêdzie wygl±da³ nastêpuj±co:
+\begin{verbatim}
+cdc-tool [opcja]... [KATALOG]
+\end{verbatim}
+Natomiast dostêpne opcje modyfikuj±ce standardowe dzia³anie programu to:
+\begin{itemize}
+\item wy¶wietlenie pomocy (domy¶lne zachowanie przy b³êdnym wywo³aniu
+programu),
+\item wybór czy katalog ma zostaæ przeszukany rekursywnie,
+\item okre¶lenie rozszerzenia plików ¼ród³owych (domy¶lnie zgodne z konwencj±
+danego systemu operacyjnego),
+\item ewentualnie mo¿liwo¶æ ignorowania wybranych plików.
+\end{itemize}
+
+\section{Wymagania pozafunkcjonalne}
+
+\paragraph{Implementacja}\
+
+G³ówna czê¶æ program zostanie napisana w jêzyku C++ z wykorzystaniem
+algorytmów i struktur danych dostarczanych przez bibliotekê \emph{The Boost
+Graph Library (BGL)}. Rozwa¿amy u¿ycie skryptów jêzyka interpretowanego
+Perl do analizy plików ¼ród³owych. Konieczne jest zapewnienie zgodno¶ci
+z dwoma systemami operacyjnymi:
+\begin{itemize}
+\item GNU/Linux
+\item Windows
+\end{itemize}
+Dodatkowym artefaktem wygenerowanym w trakcie realizacji projektu bêdzie zestaw
+testów. 
+
+\paragraph{Narzêdzia}\
+
+W projekcie zostan± wykorzystane nastêpuj±ce narzêdzia programistyczne:
+\begin{itemize}
+\item kompilatory: \emph{GCC 4.4.4}, \emph{Microsoft Visual C++ 2010}
+\item edytory/¶rodowiska programistyczne: \emph{vim}, \emph{Microsoft Visual
+Studio 2010}
+\item narzêdzia automatycznej kompilacji: \emph{SCons}/\emph{GNU make}
+\item repozytorium: \emph{git}
+\item inne: \emph{valgrind}, \emph{doxygen}
+\end{itemize}
+
+Dokumentacja wstêpna i koñcowa bêdzie tworzona w systemie \LaTeX.
+
+\end{document}
+

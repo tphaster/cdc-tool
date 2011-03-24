@@ -1,0 +1,19 @@
+Circular Dependency Check Tool (for C/C++)
+
+cdc-tool is a handy program to help you get rid of circular dependencies
+between source files in C/C++ code (through #include directive). It
+works in batch mode (over command-line) and works under GNU/Linux and MS
+Windows.
+
+
+cdc-tool main directory structure
+
+cdc-tool/
+    |-- doc/        -> documentation
+    |-- include/    -> header files
+    |-- src/        -> source files
+    |-- sys/        -> operating system dependent files
+    |   |-- unix/       -> Unix-like
+    |   `-- win/        -> MS Windows
+    `-- README      -> this README
+
