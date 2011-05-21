@@ -25,14 +25,15 @@ my $pattern =
     '^.+\.(c|i|ii|h|cc|cp|cxx|cpp|CPP|c++|C|hh|H|hp|hxx|hpp|HPP|h++|tcc)$';
 my $dir     = shift;
 
-find (sub {get_includes("$File::Find::name") if /$pattern/}, $dir);
+find (sub {get_includes($_, "$File::Find::name") if /$pattern/}, $dir);
 
 sub get_includes {
     my $filename = shift;
+    my $full_fn = shift;
 
     open(my $cfile, $filename) or die("Can't open file '$filename': $!");
-    $filename =~ s/^\Q$dir\E//;
-    print "File: $filename\n";
+    $full_fn =~ s/^\Q$dir\E//;
+    print "File: $full_fn\n";
 
     while (<$cfile>) {
         chomp;
