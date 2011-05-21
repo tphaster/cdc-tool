@@ -13,7 +13,7 @@
 using namespace std;
 using namespace boost;
 
-typedef adjacency_list<vecS, vecS, bidirectionalS> Graph;
+typedef adjacency_list<vecS, vecS, directedS> Graph;
 typedef std::pair<int, int> Edge;
 typedef graph_traits<Graph>::vertex_descriptor Vertex;
 
