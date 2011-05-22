@@ -24,15 +24,28 @@ die("No directory given: Bad number of arguments") unless (0 == $#ARGV);
 my $pattern =
     '^.+\.(c|i|ii|h|cc|cp|cxx|cpp|CPP|c++|C|hh|H|hp|hxx|hpp|HPP|h++|tcc)$';
 my $dir     = shift;
+my $q_dir   = quotemeta($dir);
 
-find (sub {get_includes($_, "$File::Find::name") if /$pattern/}, $dir);
+my $fileno = 0;
+find (sub {print_file($File::Find::name) if /$pattern/}, $dir);
+print "\n";
+
+find (sub {get_includes($_, $File::Find::name) if /$pattern/}, $dir);
+
+sub print_file {
+    my $full_fn = shift;
+    $full_fn =~ s/^$q_dir//;
+
+    print "$fileno $full_fn\n";
+    ++$fileno;
+}
 
 sub get_includes {
     my $filename = shift;
     my $full_fn = shift;
 
     open(my $cfile, $filename) or die("Can't open file '$filename': $!");
-    $full_fn =~ s/^\Q$dir\E//;
+    $full_fn =~ s/^$q_dir//;
     print "File: $full_fn\n";
 
     while (<$cfile>) {

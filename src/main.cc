@@ -1,7 +1,7 @@
 /**
  *    Filename:  main.cc
  * Description:  cdc-tool main() function, this is Where It All Begins
- *    Compiler:  gcc -lboost_program_options
+ *    Compiler:  g++ -lboost_program_options
  *      Author:  Tomasz Pieczerak (tphaster)
  */
 
