@@ -59,8 +59,7 @@ int main (void)
     for (fs::recursive_directory_iterator iter(current_dir), end;
          iter != end; ++iter)
     {
-        string name = iter->path().leaf();
-        if (regex_match(name, pattern))
+        if (regex_match(iter->path().filename(), pattern))
             process_file(iter->path().string());
     }
 
