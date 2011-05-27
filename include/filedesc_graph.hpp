@@ -12,8 +12,9 @@
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
 
-typedef boost::adjacency_list<vecS, vecS, directedS,
-                              property<vertex_name_t, string> > Graph;
+typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS,
+                              boost::property<boost::vertex_name_t, std::string> >
+                              Graph;
 typedef std::pair<int, int> Edge;
 typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;
 
