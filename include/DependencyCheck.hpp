@@ -16,7 +16,7 @@
 #include <fstream>
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
-
+#include "filedesc_graph.hpp"
 
 class DependencyCheck
 {
@@ -26,6 +26,7 @@ private:
 public:
     typedef std::map<std::string, size_t> FilesMap;
     typedef std::pair<std::string, size_t> FileDesc;
+    typedef boost::property_map<Graph, boost::vertex_name_t>::type NameMap;
     typedef boost::filesystem::path DirPath;
     typedef boost::regex Regex;
 
@@ -34,26 +35,35 @@ public:
                              { }
     ~DependencyCheck (void) { }
 
-    bool load_dir (const DirPath& dir);
-    bool load_dep (void);
+    void load_dir (const DirPath& dir);
+    void load_dep (void);
+    void print_dep (void)
+    {
+        NameMap name = get(boost::vertex_name, _files_dep);
 
-private:
+        boost::graph_traits<Graph>::edge_iterator ei, ei_end;
+        for (boost::tie(ei, ei_end) = boost::edges(_files_dep); ei != ei_end; ++ei)
+            std::cout << "" << name[source(*ei, _files_dep)]
+                << " -> " << name[target(*ei, _files_dep)] << "\n";
+        std::cout << std::endl;
+    }
+
+protected:
     Regex _includes;
     Regex _files;
     DirPath _dir;
     FilesMap _files_map;
+    Graph _files_dep;
     size_t _file_counter;
 };
 
-bool DependencyCheck::load_dir (const DirPath& dir)
+void DependencyCheck::load_dir (const DirPath& dir)
 {
     _dir = dir;
     _file_counter = 0;
     _files_map.clear();
 
-    std::cout << "debug: set dir to: "<<_dir << std::endl;
-
-    /* TODO: directory validity check */
+    std::cout << "debug: set dir to: "<< _dir << std::endl;
 
     for (boost::filesystem::directory_iterator iter(_dir), end;
          iter != end; ++iter)
@@ -67,8 +77,6 @@ bool DependencyCheck::load_dir (const DirPath& dir)
                       << " (" << _file_counter-1 << ")\n";
         }
     }
-
-    return true;
 }
 
 
@@ -81,28 +89,34 @@ void DependencyCheck::process_file (const std::string& name)
                   << name << std::endl;
         return;
     }
-
-    std::cout << "File: " << name << "\n";
+    std::cout << "debug: analysing file " << name << std::endl;
 
     std::string line;
     boost::smatch what;
     while (std::getline(is, line)) {
         if (boost::regex_match(line, what, _includes)) {
-            std::cout << std::string(what[1].first, what[1].second)
+            /* TODO: check whether files are in map */
+            boost::add_edge(_files_map.find(name)->second,
+                  _files_map.find(std::string(what[1].first, what[1].second))->second,
+                  _files_dep);
+            std::cout << "debug: added edge: " << name << " -> "
+                      << std::string(what[1].first, what[1].second)
                       << std::endl;
         }
     }
-    std::cout << std::endl;
 }
 
-bool DependencyCheck::load_dep (void)
+void DependencyCheck::load_dep (void)
 {
+    _files_dep = Graph(_files_map.size());
+    NameMap name = get(boost::vertex_name, _files_dep);
+
     for (FilesMap::iterator it = _files_map.begin();
          it != _files_map.end(); ++it)
     {
         process_file(it->first);
+        name[it->second] = it->first;
     }
-    return true;
 }
 
 #endif /* __DEPENDENCYCHECK_HPP */
