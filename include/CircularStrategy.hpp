@@ -1,64 +1,66 @@
 /**
- *    Filename:  CircularDep.hpp
- * Description:  Class for finding circular file dependencies
+ *    Filename:  CircularStrategy.hpp
+ * Description:  Strategy for finding circular file dependencies
  *    Compiler:  g++
- *      Author:  Tomasz Pieczerak (tphaster)
+ *      Author:  Tomasz Pieczerak
  */
 
-#ifndef __CIRCULARDEP_HPP
-#define __CIRCULARDEP_HPP
+#ifndef __CIRCULAR_STRATEGY_HPP
+#define __CIRCULAR_STRATEGY_HPP
 
 #include <list>
 #include <vector>
+#include <iostream>
 #include <boost/graph/strong_components.hpp>
-#include "DependencyCheck.hpp"
+#include "DepCheckStrategy.hpp"
 
-class CircularDep : public DependencyCheck {
-    typedef std::vector<std::list<int> > CyclesVec;
-public:
-    CircularDep (void) : DependencyCheck() {}
-    ~CircularDep (void) {}
-
-    void check_dep (void)
-    {
-        std::vector<int> component(_files_map.size());
-        size_t num = boost::strong_components(_files_dep, &component[0]);
-
-        if (num == _files_map.size()) {
-            _cycles.clear();
-        }
-        else {
-            _cycles = CyclesVec(num);
-
-            for (std::vector<int>::size_type i = 0; i != component.size(); ++i)
-                _cycles[component[i]].push_back(i);
-        }
-    }
-
-    void print_cycles (void)
-    {
-        if (_cycles.size() == 0)
-            std::cout << "No cycles detected." << std::endl;
-        else {
-            NameMap d = get(boost::vertex_name, _files_dep);
-
-            for (size_t i = 0; i < _cycles.size(); ++i) {
-                if (_cycles[i].size() > 1) {
-                    std::cout << "Cycle: ";
-                    for (std::list<int>::iterator it = _cycles[i].begin();
-                         it != _cycles[i].end(); ++it)
-                    {
-                        std::cout << d[*it] << ", ";
-                    }
-                    std::cout << "\n";
-                }
-            }
-            std::cout << std::endl;
-        }
-    }
+class CircularStrategy : public DepCheckStrategy
+{
 private:
-    CyclesVec _cycles;
+    typedef std::list<int> Cycle;
+    typedef std::vector<Cycle> CyclesVec;
+    typedef std::vector<int> CompVec;
+
+public:
+    CircularStrategy (void) { }
+    ~CircularStrategy (void) { }
+
+    void check_dep (Graph& dep);
 };
 
-#endif /* __CIRCULARDEP_HPP */
+void CircularStrategy::check_dep (Graph& deps)
+{
+    Graph::vertices_size_type size = boost::num_vertices(deps);
+    CompVec component(size);
+
+    size_t cnum = boost::strong_components(deps, &component[0]);
+
+    if (cnum == size) {
+        std::cout << "No cycles detected." << std::endl;
+    }
+    else {
+        CyclesVec cycles = CyclesVec(cnum);
+
+        for (CompVec::size_type i = 0; i != component.size(); ++i)
+            cycles[component[i]].push_back(i);
+
+        NameMap names = boost::get(boost::vertex_name, deps);
+
+        std::cout << "Cycle(s) detected...\n";
+        for (CompVec::size_type i = 0; i < cnum; ++i) {
+            if (cycles[i].size() > 1) {
+                std::cout << "Cycle found: ";
+                for (Cycle::const_iterator it = cycles[i].begin();
+                     it != cycles[i].end(); ++it)
+                {
+                    std::cout << names[*it] << " ";
+                }
+                std::cout << "\n";
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
+#endif  /* __CIRCULAR_STRATEGY_HPP */
 
