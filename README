@@ -12,8 +12,6 @@ cdc-tool/
     |-- doc/        -> documentation
     |-- include/    -> header files
     |-- src/        -> source files
-    |-- sys/        -> operating system dependent files
-    |   |-- unix/       -> Unix-like
-    |   `-- win/        -> MS Windows
     `-- README      -> this README
+    `-- SConstruct  -> SCons' config file
 
