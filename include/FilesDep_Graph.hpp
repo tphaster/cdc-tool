@@ -1,5 +1,5 @@
 /**
- *    Filename:  filedesc_graph.hpp
+ *    Filename:  FilesDep_Graph.hpp
  * Description:  
  *    Compiler:  g++
  *      Author:  Tomasz Pieczerak (tphaster)
@@ -17,6 +17,7 @@ typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS,
                               Graph;
 typedef std::pair<int, int> Edge;
 typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;
+typedef boost::property_map<Graph, boost::vertex_name_t>::type NameMap;
 
 #endif  /* __FILEDESC_GRAPH_HPP */
 
