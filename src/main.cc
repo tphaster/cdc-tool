@@ -8,6 +8,8 @@
 #include <iostream>
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
+#include "FilesDep.hpp"
+#include "CircularStrategy.hpp"
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
@@ -66,8 +68,13 @@ int main (int argc, char **argv)
             if (fs::exists(dir_path)) {
                 if (fs::is_directory(dir_path)) {
                     cout << "cdc-tool: project's directory set to "
-                         << dir_path.relative_path() << ".\n";
+                        << dir_path.relative_path() << ".\n";
                     /* now everything is checked, we shall continue */
+
+                    FilesDep fd(new CircularStrategy);
+                    fd.load_dir(dir_path);
+                    fd.print_dep();
+                    fd.check_dep();
                 }
                 else {
                     cerr << "cdc-tool: error: " << dir_path.relative_path()
@@ -84,8 +91,6 @@ int main (int argc, char **argv)
             cout << "cdc-tool: error: directory was not set" << endl;
             return EXIT_FAILURE;
         }
-
-        /* TODO: rest of code goes here */
     }
     catch (const fs::filesystem_error& ex) {
         cout << "cdc-tool: error: " << ex.what() << endl;
