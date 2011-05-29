@@ -25,10 +25,10 @@ public:
     CircularStrategy (void) { }
     ~CircularStrategy (void) { }
 
-    void check_dep (Graph& dep);
+    void check_dep (const Graph& dep);
 };
 
-void CircularStrategy::check_dep (Graph& deps)
+void CircularStrategy::check_dep (const Graph& deps)
 {
     Graph::vertices_size_type size = boost::num_vertices(deps);
     CompVec component(size);
@@ -44,7 +44,7 @@ void CircularStrategy::check_dep (Graph& deps)
         for (CompVec::size_type i = 0; i != component.size(); ++i)
             cycles[component[i]].push_back(i);
 
-        NameMap names = boost::get(boost::vertex_name, deps);
+        const_NameMap names = boost::get(boost::vertex_name, deps);
 
         std::cout << "Cycle(s) detected...\n";
         for (CompVec::size_type i = 0; i < cnum; ++i) {
