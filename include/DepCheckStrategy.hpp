@@ -15,7 +15,7 @@ class DepCheckStrategy
 public:
     virtual ~DepCheckStrategy (void) { }
 
-    virtual void check_dep (Graph& deps) = 0;
+    virtual void check_dep (const Graph& deps) = 0;
 };
 
 #endif  /* __DEP_CHECK_STRATEGY_HPP */

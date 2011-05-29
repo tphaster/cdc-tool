@@ -2,7 +2,7 @@
  *    Filename:  main.cc
  * Description:  cdc-tool main() function, this is Where It All Begins
  *    Compiler:  g++ -lboost_program_options -lboost_filesystem
- *      Author:  Tomasz Pieczerak (tphaster)
+ *      Author:  Tomasz Pieczerak
  */
 
 #include <iostream>
@@ -15,7 +15,7 @@ namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 using namespace std;
 
-const string VERSION("cdc-tool 0.0.1");
+const string VERSION("cdc-tool 0.1");
 
 
 int main (int argc, char **argv)
@@ -68,7 +68,7 @@ int main (int argc, char **argv)
             if (fs::exists(dir_path)) {
                 if (fs::is_directory(dir_path)) {
                     cout << "cdc-tool: project's directory set to "
-                        << dir_path.relative_path() << ".\n";
+                        << dir_path << "\n";
                     /* now everything is checked, we shall continue */
 
                     FilesDep fd(new CircularStrategy);
@@ -87,13 +87,14 @@ int main (int argc, char **argv)
                      << " no such directory" << endl;
                 return EXIT_FAILURE;
             }
-        } else {
-            cout << "cdc-tool: error: directory was not set" << endl;
+        }
+        else {
+            cerr << "cdc-tool: error: directory was not set" << endl;
             return EXIT_FAILURE;
         }
     }
     catch (const fs::filesystem_error& ex) {
-        cout << "cdc-tool: error: " << ex.what() << endl;
+        cerr << "cdc-tool: error: " << ex.what() << endl;
     }
     catch (exception& e) {
         cerr << "cdc-tool: error: " << e.what() << endl;
@@ -106,3 +107,4 @@ int main (int argc, char **argv)
 
     return EXIT_SUCCESS;
 }
+
