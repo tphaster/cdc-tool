@@ -42,7 +42,7 @@ void CircularStrategy::check_dep (const Graph& deps)
             if (cycles[i].size() > 1) {
                 cout << "Cycle found: ";
                 for_each(cycles[i].begin(), cycles[i].end(),
-                         bind(&CircularStrategy::print_vname, _1, names));
+                         boost::bind(&CircularStrategy::print_vname, _1, names));
                 cout << "\n";
             }
         }
