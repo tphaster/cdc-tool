@@ -13,8 +13,10 @@
 class DepCheckStrategy
 {
 public:
+    /* ======= Lifecycle ======= */
     virtual ~DepCheckStrategy (void) { }
 
+    /* ======= Operations ======= */
     virtual void check_dep (const Graph& deps) = 0;
 };
 

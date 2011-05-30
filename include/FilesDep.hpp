@@ -11,9 +11,6 @@
 #include <map>
 #include <string>
 #include <utility>
-#include <fstream>
-#include <iostream>
-#include <iterator>
 #include <stdexcept>
 #include <boost/regex.hpp>
 #include <boost/filesystem.hpp>
@@ -88,7 +85,7 @@ private:
     typedef std::pair<std::string, int> FileDesc;
 
     /* ======= Helper methods ======= */
-    void process_file (const FilesMap::iterator& file_desc);
+    void process_file (const FilesMap::value_type& file_desc, NameMap& names);
 
     /* ======= Data Members ======= */
     boost::shared_ptr<DepCheckStrategy> _strategy;  /** Pointer to Strategy */
