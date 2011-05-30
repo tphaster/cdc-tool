@@ -57,7 +57,7 @@ void FilesDep::load_dir (const DirPath& dir, bool rec)
 
     /* analyze each file and find dependencies */
     for_each(_files_map.begin(), _files_map.end(),
-             bind(&FilesDep::process_file, this, _1, names));
+             boost::bind(&FilesDep::process_file, this, _1, names));
     cout << endl;
 }
 
