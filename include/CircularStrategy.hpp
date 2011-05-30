@@ -28,39 +28,5 @@ public:
     void check_dep (const Graph& dep);
 };
 
-void CircularStrategy::check_dep (const Graph& deps)
-{
-    Graph::vertices_size_type size = boost::num_vertices(deps);
-    CompVec component(size);
-
-    size_t cnum = boost::strong_components(deps, &component[0]);
-
-    if (cnum == size) {
-        std::cout << "No cycles detected." << std::endl;
-    }
-    else {
-        CyclesVec cycles = CyclesVec(cnum);
-
-        for (CompVec::size_type i = 0; i != component.size(); ++i)
-            cycles[component[i]].push_back(i);
-
-        const_NameMap names = boost::get(boost::vertex_name, deps);
-
-        std::cout << "Cycle(s) detected...\n";
-        for (CompVec::size_type i = 0; i < cnum; ++i) {
-            if (cycles[i].size() > 1) {
-                std::cout << "Cycle found: ";
-                for (Cycle::const_iterator it = cycles[i].begin();
-                     it != cycles[i].end(); ++it)
-                {
-                    std::cout << names[*it] << " ";
-                }
-                std::cout << "\n";
-            }
-        }
-        std::cout << std::endl;
-    }
-}
-
 #endif  /* __CIRCULAR_STRATEGY_HPP */
 
