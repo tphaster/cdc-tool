@@ -19,9 +19,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "FilesDep_Graph.hpp"
 #include "DepCheckStrategy.hpp"
-
+#include "FilesDep_Graph.hpp"
 
 class FilesDep
 {
@@ -29,29 +28,36 @@ public:
     typedef boost::filesystem::path DirPath;
     typedef boost::regex Regex;
 
+    static const char CCPP_SRC_REGEX[];
+    static const char CCPP_INCLUDE_REGEX[];
+
     class StrategyNotSet : public std::runtime_error {
     public:
         StrategyNotSet (void) : runtime_error("no strategy set") { }
-    }; 
+    };
     class NoDirectoryLoaded : public std::runtime_error {
     public:
         NoDirectoryLoaded (void) : runtime_error("no directory loaded") { }
     };
+    class EmptyDirectory : public std::runtime_error {
+    public:
+        EmptyDirectory (void) : runtime_error("empty directory") { }
+    };
 
-    FilesDep (DepCheckStrategy *strategy)
-        : _strategy(strategy),
-          _includes("^#include[\t ]*\"(.*)\"[\t ]*$"),
-          _files("^.+\\.(c|i|ii|h|cc|cp|cxx|cpp|CPP|c++|C|hh|H|hp|hxx|hpp|HPP|h++|tcc)$")
+    FilesDep (void) : _strategy(), _includes(CCPP_SRC_REGEX),
+          _files(CCPP_INCLUDE_REGEX)
+          { }
+
+    FilesDep (DepCheckStrategy *strategy) : _strategy(strategy),
+          _includes(CCPP_SRC_REGEX), _files(CCPP_INCLUDE_REGEX)
           { }
     FilesDep (boost::shared_ptr<DepCheckStrategy> strategy)
-        : _strategy(strategy),
-          _includes("^#include[\t ]*\"(.*)\"[\t ]*$"),
-          _files("^.+\\.(c|i|ii|h|cc|cp|cxx|cpp|CPP|c++|C|hh|H|hp|hxx|hpp|HPP|h++|tcc)$")
+        : _strategy(strategy), _includes(CCPP_SRC_REGEX),
+          _files(CCPP_INCLUDE_REGEX)
           { }
-
     ~FilesDep (void) { }
 
-    void load_dir (const DirPath& dir);
+    void load_dir (const DirPath& dir, bool rec);
     void print_dep (void) const;
     void check_dep (void) const;
 
@@ -68,7 +74,6 @@ private:
     typedef std::map<std::string, int> FilesMap;
     typedef std::pair<std::string, int> FileDesc;
 
-    FilesDep (void);
     void process_file (const FilesMap::iterator& file_desc);
 
     boost::shared_ptr<DepCheckStrategy> _strategy;
@@ -79,21 +84,42 @@ private:
     Graph _files_dep;
 };
 
-void FilesDep::load_dir (const DirPath& dir)
+const char FilesDep::CCPP_SRC_REGEX[] = "^.+\\.(c|i|ii|h|cc|cp|cxx|cpp|CPP|c++"
+                                        "|C|hh|H|hp|hxx|hpp|HPP|h++|tcc)$";
+const char FilesDep::CCPP_INCLUDE_REGEX[] = "^#include[\t ]*\"(.*)\"[\t ]*$";
+
+void FilesDep::load_dir (const DirPath& dir, bool rec)
 {
     size_t file_counter = 0;
-    _dir = dir;
+    _dir = (dir / boost::filesystem::path("cd")).parent_path();
     _files_map.clear();
 
-    for (boost::filesystem::directory_iterator iter(_dir), end;
-         iter != end; ++iter)
-    {
-        if (boost::filesystem::is_regular_file(iter->path()) &&
-            boost::regex_match(iter->path().filename(), _files))
+    if (rec) {
+        for (boost::filesystem::recursive_directory_iterator iter(_dir), end;
+             iter != end; ++iter)
         {
-            _files_map.insert(FileDesc(iter->filename(), file_counter++));
+            if (boost::filesystem::is_regular_file(iter->path()) &&
+                boost::regex_match(iter->path().filename(), _files))
+            {
+                std::string rel_path =
+                    iter->path().string().substr(_dir.string().length()+1);
+                _files_map.insert(FileDesc(rel_path, file_counter++));
+            }
         }
     }
+    else {
+        for (boost::filesystem::directory_iterator iter(_dir), end;
+             iter != end; ++iter)
+        {
+            if (boost::filesystem::is_regular_file(iter->path()) &&
+                boost::regex_match(iter->path().filename(), _files))
+            {
+                _files_map.insert(FileDesc(iter->filename(), file_counter++));
+            }
+        }
+    }
+    if (_files_map.size() == 0)
+        throw EmptyDirectory();
 
     _files_dep = Graph(_files_map.size());
     NameMap name = get(boost::vertex_name, _files_dep);
@@ -104,6 +130,7 @@ void FilesDep::load_dir (const DirPath& dir)
         process_file(it);
         name[it->second] = it->first;
     }
+    std::cout << std::endl;
 }
 
 void FilesDep::print_dep (void) const
@@ -114,6 +141,7 @@ void FilesDep::print_dep (void) const
     const_NameMap name = get(boost::vertex_name, _files_dep);
 
     boost::graph_traits<Graph>::edge_iterator ei, ei_end;
+    std::cout << "Detected file dependencies...\n";
     for (boost::tie(ei, ei_end) = boost::edges(_files_dep); ei != ei_end; ++ei)
         std::cout << "" << name[source(*ei, _files_dep)]
                   << " -> " << name[target(*ei, _files_dep)] << "\n";
@@ -136,7 +164,7 @@ void FilesDep::process_file (const FilesMap::iterator& file_desc)
     std::ifstream is((_dir / file_desc->first).string().c_str());
 
     if (is.fail()) {
-        std::cerr << "error: unable to open file " << file_desc->first
+        std::cerr << "warning: unable to open file " << file_desc->first
                   << std::endl;
         return;
     }
@@ -151,7 +179,7 @@ void FilesDep::process_file (const FilesMap::iterator& file_desc)
             if (to != _files_map.end())
                 boost::add_edge(file_desc->second, to->second, _files_dep);
             else
-                std::cerr << "error: no such file as '"
+                std::cerr << "warning: no such file as '"
                           << std::string(what[1].first, what[1].second)
                           << "'\n";
         }

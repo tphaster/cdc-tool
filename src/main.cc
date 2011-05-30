@@ -2,20 +2,21 @@
  *    Filename:  main.cc
  * Description:  cdc-tool main() function, this is Where It All Begins
  *    Compiler:  g++ -lboost_program_options -lboost_filesystem
+ *                   -lboost_regex
  *      Author:  Tomasz Pieczerak
  */
 
 #include <iostream>
-#include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
-#include "FilesDep.hpp"
+#include <boost/program_options.hpp>
 #include "CircularStrategy.hpp"
+#include "FilesDep.hpp"
 
 namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 using namespace std;
 
-const string VERSION("cdc-tool 0.1");
+const string VERSION("cdc-tool 0.2");
 
 
 int main (int argc, char **argv)
@@ -27,7 +28,9 @@ int main (int argc, char **argv)
         opts.add_options()
             ("help,h", "print this help")
             ("version,V", "display the version of cdc-tool and exit")
-            ("verbose,v", "enable verbose mode");
+            ("files,f", po::value<string>(), "regex for C/C++ source files")
+            ("print,p", "print files' dependencies")
+            ("recursive,r", "recursive directory traversal");
         hidden.add_options()
             ("dir", po::value<string>(), "project's main directory");
 
@@ -41,6 +44,8 @@ int main (int argc, char **argv)
         po::store(po::command_line_parser(argc, argv).
                   options(cmdline).positional(pos).run(), vm);
         po::notify(vm);    
+
+        FilesDep fd(new CircularStrategy);
 
         if (vm.count("help")) {
             cout << VERSION << ", Circular Dependency Check Tool for C/C++\n"
@@ -59,49 +64,53 @@ int main (int argc, char **argv)
                  << endl;
             return EXIT_SUCCESS;
         }
-        if (vm.count("verbose")) {
-            cout << "cdc-tool: verbose mode set" << endl;
+        if (vm.count("files")) {
+            FilesDep::Regex files(vm["files"].as<string>());
+            cout << "info: files regex set to '" << files << "'\n";
+            fd.set_files_regex(files);
         }
         if (vm.count("dir")) {
             fs::path dir_path(vm["dir"].as<string>());
 
             if (fs::exists(dir_path)) {
                 if (fs::is_directory(dir_path)) {
-                    cout << "cdc-tool: project's directory set to "
-                        << dir_path << "\n";
-                    /* now everything is checked, we shall continue */
+                    cout << "info: project's directory set to " << dir_path
+                         << "\n";
 
-                    FilesDep fd(new CircularStrategy);
-                    fd.load_dir(dir_path);
-                    fd.print_dep();
-                    fd.check_dep();
+                    fd.load_dir(dir_path, vm.count("recursive"));
                 }
                 else {
-                    cerr << "cdc-tool: error: " << dir_path.relative_path()
+                    cerr << "error: " << dir_path
                          << " is not a valid directory" << endl;
                     return EXIT_FAILURE;
                 }
             }
             else {
-                cerr << "cdc-tool: error: " << dir_path.relative_path()
-                     << " no such directory" << endl;
+                cerr << "error: " << dir_path << " no such directory"
+                     << endl;
                 return EXIT_FAILURE;
             }
         }
         else {
-            cerr << "cdc-tool: error: directory was not set" << endl;
+            cerr << "cdc-tool: error: directory was not set\n"
+                 << "Usage: cdc_tool [OPTION]... [DIR]" << endl;
             return EXIT_FAILURE;
         }
+
+        if (vm.count("print"))
+            fd.print_dep();
+
+        fd.check_dep();
     }
     catch (const fs::filesystem_error& ex) {
-        cerr << "cdc-tool: error: " << ex.what() << endl;
+        cerr << "error: " << ex.what() << endl;
     }
     catch (exception& e) {
-        cerr << "cdc-tool: error: " << e.what() << endl;
+        cerr << "error: " << e.what() << endl;
         return EXIT_FAILURE;
     }
     catch (...) {
-        cerr << "cdc-tool: error: exception of unknown type!" << endl;
+        cerr << "error: exception of unknown type!" << endl;
         return EXIT_FAILURE;
     }
 
