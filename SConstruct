@@ -15,8 +15,3 @@ elif (platform.system() == "Windows"):
     env.Append(LIBS = Split('libboost_system-vc100-mt-s-1_46_1 libboost_filesystem-vc100-mt-s-1_46_1 libboost_regex-vc100-mt-s-1_46_1 libboost_program_options-vc100-mt-s-1_46_1'))
     env.Program('cdc-tool', src)
 
-    #libs = Split('libboost_system-vc100-mt-s-1_46_1 libboost_filesystem-vc100-mt-s-1_46_1 libboost_regex-vc100-mt-s-1_46_1 libboost_program_options-vc100-mt-s-1_46_1')
-    #libpaths = Dir('/Program Files/boost/boost_1_46_1/lib')
-    #include = [Dir('include'), Dir('/Program Files/boost/boost_1_46_1')])
-    #Program('cdc-tool', src, LIBPATH = libpaths, LIBS = libs, CPPPATH = include, CPPFLAGS = '/EHsc')
-
