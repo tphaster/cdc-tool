@@ -1,9 +1,14 @@
 /**
- *    Filename:  main.cc
- * Description:  cdc-tool main() function, this is Where It All Begins
- *    Compiler:  g++ -lboost_program_options -lboost_filesystem
- *                   -lboost_regex
- *      Author:  Tomasz Pieczerak
+ * @file src\main.cc
+ * @brief cdc-tool main() function, this is Where It All Begins
+ *
+ * cdc-tool is a handy program to help you get rid of circular dependencies
+ * between source files in C/C++ code (through #include directive). It
+ * works in batch mode (over command-line) and works under GNU/Linux and MS
+ * Windows.
+ *
+ * @author Tomasz Pieczerak
+ * @author Maciej Rubikowski
  */
 
 #include <iostream>
@@ -16,10 +21,12 @@ namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 using namespace std;
 
-const string VERSION("cdc-tool 0.3");   /* version string constant */
+const string VERSION("cdc-tool 0.3");   /**< version string constant */
 
 /**
  * This is the main() function.
+ * @param[in] argc number of command-line arguments
+ * @param[in] argv array of command-line arguments (C-style strings)
  */
 int main (int argc, char **argv)
 {

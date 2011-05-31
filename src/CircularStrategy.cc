@@ -1,8 +1,10 @@
 /**
- *    Filename:  CircularStrategy.cc
- * Description:  CircularStrategy's methods implementation
- *    Compiler:  g++
- *      Author:  Tomasz Pieczerak
+ * @file CircularStrategy.cc
+ *
+ * CircularStrategy methods implementation
+ *
+ * @author Tomasz Pieczerak
+ * @author Maciej Rubikowski
  */
 
 #include <iostream>

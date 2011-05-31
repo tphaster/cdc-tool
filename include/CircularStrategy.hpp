@@ -1,8 +1,10 @@
 /**
- *    Filename:  CircularStrategy.hpp
- * Description:  Strategy for finding circular file dependencies
- *    Compiler:  g++
- *      Author:  Tomasz Pieczerak
+ * @file CircularStrategy.hpp
+ *
+ * Strategy for finding circular file dependencies
+ *
+ * @author Tomasz Pieczerak
+ * @author Maciej Rubikowski
  */
 
 #ifndef __CIRCULAR_STRATEGY_HPP
@@ -13,6 +15,9 @@
 #include <iostream>
 #include "DepCheckStrategy.hpp"
 
+/**
+ * Strategy for finding circular file dependencies
+ */
 class CircularStrategy : public DepCheckStrategy
 {
 private:
@@ -32,6 +37,10 @@ public:
     ~CircularStrategy (void) { }
 
     /* ======= Operations ======= */
+    /**
+     * Implements the interface specified in DepCheckStrategy.
+     * @see DepCheckStrategy::check_dep (const Graph& deps)
+     */
     void check_dep (const Graph& dep);
 };
 

@@ -1,8 +1,10 @@
 /**
- *    Filename:  FilesDep.cc
- * Description:  FilesDep's methods implementation
- *    Compiler:  g++ -lboost_regex -lboost_filesystem
- *      Author:  Tomasz Pieczerak
+ * @file FilesDep.cc
+ *
+ * FilesDep's methods implementation
+ *
+ * @author Tomasz Pieczerak
+ * @author Maciej Rubikowski
  */
 
 #include <fstream>
