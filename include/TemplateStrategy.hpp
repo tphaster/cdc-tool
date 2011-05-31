@@ -1,9 +1,12 @@
 /**
- *    Filename:  TemplateStrategy.hpp
- * Description:  Template for creating new strategies
- *    Compiler:  g++
- *      Author:  Tomasz Pieczerak
+ * @file TemplateStrategy.hpp
+ * @brief Template for creating new strategies
+ *
+ * Template for the strategy pattern 
+ *
+ * @author: Tomasz Pieczerak (tphaster)
  */
+
 
 #ifndef __TEMPLATE_STRATEGY_HPP
 #define __TEMPLATE_STRATEGY_HPP
