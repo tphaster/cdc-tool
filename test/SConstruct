@@ -1,0 +1,12 @@
+
+import platform, os
+
+env = Environment()
+src = Split('TestCS.cc #../src/CircularStrategy.cc')
+
+if (platform.system() == "Linux"):
+    env.Append(CPPPATH = '../include')
+    env.Append(CPPFLAGS = '-Wall -Wextra -ansi -pedantic-errors -Wno-deprecated -O2')
+    env.Append(LIBS = Split('boost_unit_test_framework'))
+    env.Program('TestCS', src)
+

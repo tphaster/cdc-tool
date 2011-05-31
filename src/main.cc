@@ -16,7 +16,7 @@ namespace fs = boost::filesystem;
 namespace po = boost::program_options;
 using namespace std;
 
-const string VERSION("cdc-tool 0.2");   /* version string constant */
+const string VERSION("cdc-tool 0.3");   /* version string constant */
 
 /**
  * This is the main() function.
@@ -125,7 +125,7 @@ int main (int argc, char **argv)
         fd.check_dep();
     }
     catch (const fs::filesystem_error& ex) {
-        cerr << "error: (filesystem)" << ex.what() << endl;
+        cerr << "error: (filesystem) " << ex.what() << endl;
         return EXIT_FAILURE;
     }
     catch (exception& e) {

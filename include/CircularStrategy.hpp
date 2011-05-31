@@ -10,6 +10,7 @@
 
 #include <list>
 #include <vector>
+#include <iostream>
 #include "DepCheckStrategy.hpp"
 
 class CircularStrategy : public DepCheckStrategy
