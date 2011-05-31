@@ -1,0 +1,20 @@
+info: project's directory set to test/recursive/
+
+Detected file dependencies...
+h2.h -> blah/h1.h
+blah/AnotherClass.hpp -> blah/SomeClass.hpp
+blah/some.h -> blah/AnotherClass.hpp
+blah/SomeClass.hpp -> blah/some.h
+blah/SomeClass.hpp -> header.h
+blah/h1.h -> h2.h
+test.c -> header.h
+test.c -> blah/SomeClass.hpp
+main.cc -> blah/AnotherClass.hpp
+main.cc -> header.h
+some.c -> blah/AnotherClass.hpp
+some.c -> blah/some.h
+
+Cycle(s) detected...
+Cycle found: h2.h blah/h1.h 
+Cycle found: blah/AnotherClass.hpp blah/some.h blah/SomeClass.hpp 
+

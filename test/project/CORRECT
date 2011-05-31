@@ -1,0 +1,22 @@
+info: project's directory set to test/project/
+warning: no such file as 'no_exist.h'
+warning: no such file as 'no_exist.hpp'
+
+Detected file dependencies...
+blah.c -> AnotherClass.hpp
+blah.c -> blah.h
+h2.h -> h1.h
+test.c -> header.h
+test.c -> SomeClass.hpp
+AnotherClass.hpp -> SomeClass.hpp
+SomeClass.hpp -> blah.h
+SomeClass.hpp -> header.h
+blah.h -> AnotherClass.hpp
+main.cc -> AnotherClass.hpp
+main.cc -> header.h
+h1.h -> h2.h
+
+Cycle(s) detected...
+Cycle found: AnotherClass.hpp SomeClass.hpp blah.h 
+Cycle found: h2.h h1.h 
+
