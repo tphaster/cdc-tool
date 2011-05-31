@@ -5,12 +5,12 @@
 \usepackage{relsize}
 \usepackage{indentfirst}
 \usepackage[MeX]{polski}
-\usepackage[latin2]{inputenc}
+\usepackage[cp1250]{inputenc}
 \usepackage[polish]{babel}
 
 \title{
     \textbf{Zaawansowane programowanie w C++ \\ Projekt} \\
-    {\normalsize<<Narzêdzie do znajdowania cyklicznych zale¿no¶ci pomiêdzy plikami>>}
+    {\normalsize<<Narzêdzie do znajdowania cyklicznych zale¿noœci pomiêdzy plikami>> \\ \small Dokumentacja koñcowa}
 }
 
 \author{
@@ -26,6 +26,42 @@
 
 \begin{document}
 \maketitle
+\tableofcontents
+\pagebreak
+
+\section{Treœæ zadania}
+W wybranym katalogu, zawieraj¹cym kod Ÿród³owy w C/C++ wyszukiwaæ poleceñ
+preprocesora \verb|#include "nazwa"| i na ich podstawie zbudowaæ graf
+(skierowany) zale¿noœci pomiêdzy plikami. Je¿eli graf zawiera cykle to
+wygenerowaæ odpowiedni komunikat.
+
+\section{Zrealizowana funkcjonalnoœæ}
+Uda³o siê zrealizowaæ wszystko, co chcieliœmy.
+
+\section{Struktura rozwi¹zania}
+
+
+\section{Wybrane techniki programistyczne}
+Ostatecznie odeszliœmy od pomys³u wykorzystania jêzyka perl do analizy plików Ÿród³owych. Okaza³o siê bowiem, ¿e \texttt{boost::filesystem} i \texttt{boost::regex} w zupe³noœci wystarcz¹ do realizacji przegl¹dania kodu w poszukiwaniu dyrektyw \texttt{\#include}. Pierwsza z bibliotek dostarcza funkcji obs³uguj¹cych system plików, druga zaœ zapewnia interfejsy niezbêdne w trakcie korzystania z \emph{wyra¿eñ regularnych}.
+
+Ogólnie z programistycznego punktu widzenia projekt nasz charakteryzuje siê intensywnym wykorzystaniem bibliotek Boost. Poza wymienionymi ju¿ \texttt{filesystem} i \texttt{regex} wykorzystaliœmy \texttt{boost::bind} (w po³aczeniu z algorytmem \texttt{for\_each}) oraz sprytne wskaŸniki (\texttt{boost::shared\_ptr}). 
+
+\section{Zarz¹dzanie projektem}
+Spektakularny sukces projektu nie by³by mo¿liwy gdyby nie wdro¿one mechanizmy zarz¹dzania przedsiêwziêciem. W naszym przypadku sprawdzi³y siê zarówno metody tradycyjne (podzia³ pracy, harmonogramowanie) jak i nowoczesne (rozproszone systemy kontroli wersji). Szczegó³ow¹ prezentacjê tych zagadnieñ zamieszczamy poni¿ej.
+
+\subsection{Wersjonowanie kodu Ÿród³owego -- Git}
+
+\subsection{Automatyczna kompilacja -- SCons}
+
+\subsection{Automatyczne generowanie dokumentacji -- doxygen}
+
+\section{Przenoœnoœæ}
+Rzecz dzia³a w Windows i w Linux, kompiluje siê zarówno pod gcc jak i pod vc2010. Realizacja poprzez SCons.
+
+\section{Testy}
+\subsection{Testy manualne}
+
+\subsection{Testy automatyczne}
 
 \end{document}
 
