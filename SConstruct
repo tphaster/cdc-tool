@@ -11,6 +11,7 @@ if (platform.system() == "Linux"):
 elif (platform.system() == "Windows"):
     env.Append(CPPPATH = [Dir('include'), Dir('/Program Files/boost/boost_1_46_1')])
     env.Append(CPPFLAGS = '/EHsc')
+    env.Append(LIBPATH = Dir('/Program Files/boost/boost_1_46_1/lib'))
     env.Append(LIBS = Split('libboost_system-vc100-mt-s-1_46_1 libboost_filesystem-vc100-mt-s-1_46_1 libboost_regex-vc100-mt-s-1_46_1 libboost_program_options-vc100-mt-s-1_46_1'))
     env.Program('cdc-tool', src)
 
