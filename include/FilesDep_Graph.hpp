@@ -1,8 +1,11 @@
 /**
- *    Filename:  FilesDep_Graph.hpp
- * Description:  
- *    Compiler:  g++
- *      Author:  Tomasz Pieczerak (tphaster)
+ * @file  FilesDep_Graph.hpp
+ * @brief Various graph typedefs for cdc-tool
+ * 
+ * Here we define some graph-connected types used project-wide. This way the code 
+ * is much cleaner and easier to read when it comes to use BGL.
+ *
+ * @author:  Tomasz Pieczerak (tphaster)
  */
 
 #ifndef __FILEDESC_GRAPH_HPP
