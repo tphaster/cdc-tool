@@ -31,3 +31,4 @@ elif (platform.system() == "Windows"):
 	env_fd.Program('TestFD', src_fd)
 else:
 	print platform.system() + " not supported"
+

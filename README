@@ -12,6 +12,7 @@ cdc-tool/
     |-- doc/        -> documentation
     |-- include/    -> header files
     |-- src/        -> source files
-    `-- README      -> this README
+    |-- test/       -> source files for tests and sample projects' dirs
+    |-- README      -> this README
     `-- SConstruct  -> SCons' config file
 
