@@ -4,13 +4,17 @@
 \usepackage{amsfonts}
 \usepackage{relsize}
 \usepackage{indentfirst}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[small]{caption}
 \usepackage[MeX]{polski}
-\usepackage[cp1250]{inputenc}
+\usepackage[latin2]{inputenc}
 \usepackage[polish]{babel}
 
 \title{
     \textbf{Zaawansowane programowanie w C++ \\ Projekt} \\
-    {\normalsize<<Narzêdzie do znajdowania cyklicznych zale¿noœci pomiêdzy plikami>> \\ \small Dokumentacja koñcowa}
+    {\normalsize<<Narzêdzie do znajdowania cyklicznych zale¿no¶ci pomiêdzy plikami>>
+        \\ \small Dokumentacja koñcowa}
 }
 
 \author{
@@ -26,70 +30,163 @@
 
 \begin{document}
 \maketitle
-\tableofcontents
-\pagebreak
+\tableofcontents \pagebreak
 
-\section{Treœæ zadania}
-W wybranym katalogu, zawieraj¹cym kod Ÿród³owy w C/C++ wyszukiwaæ poleceñ
+\section{Tre¶æ zadania}
+
+W wybranym katalogu, zawieraj±cym kod ¼ród³owy w C/C++ wyszukiwaæ poleceñ
 preprocesora \verb|#include "nazwa"| i na ich podstawie zbudowaæ graf
-(skierowany) zale¿noœci pomiêdzy plikami. Je¿eli graf zawiera cykle to
+(skierowany) zale¿no¶ci pomiêdzy plikami. Je¿eli graf zawiera cykle to
 wygenerowaæ odpowiedni komunikat.
 
-\section{Zrealizowana funkcjonalnoœæ}
-Ostateczna wersja projektu uwzglêdnia wszystkie funkcjonalnoœci wymienione w dokumentacji wstêpnej. Program poprawnie wyszukuje cykliczne zale¿noœci, choæ konieczne by³o wprowadzenie dodatkowych za³o¿eñ, o których póŸniej.
+\section{Zrealizowana funkcjonalno¶æ}
 
-Projekt uda³o siê zamkn¹æ w terminie, jednoczeœnie realizuj¹c pe³n¹ funkcjonalnoœæ systemu. Bezpiecznie mo¿na zatem za³o¿yæ, ¿e dzia³alnoœæ zakoñczy³a siê spektakularnym sukcesem, co nie jest szczególnie powszechnym zjawiskiem w bran¿y IT.
+Ostateczna wersja projektu uwzglêdnia wszystkie funkcjonalno¶ci wymienione
+w dokumentacji wstêpnej. Program poprawnie wyszukuje cykliczne zale¿no¶ci,
+choæ konieczne by³o wprowadzenie dodatkowych za³o¿eñ, o których pó¼niej.
+
+Projekt uda³o siê zamkn±æ w terminie, jednocze¶nie realizuj±c pe³n±
+funkcjonalno¶æ systemu. Bezpiecznie mo¿na zatem za³o¿yæ, ¿e dzia³alno¶æ
+zakoñczy³a siê spektakularnym sukcesem, co nie jest szczególnie powszechnym
+zjawiskiem w bran¿y IT.
 
 \section{Dokumentacja techniczna}
-W poni¿szej sekcji przedstawiamy szczegó³y techniczne zwi¹zane z budow¹ i uruchamianiem aplikacji.
+
+W poni¿szej sekcji przedstawiamy szczegó³y techniczne zwi±zane z budow±
+i uruchamianiem aplikacji.
 
 \subsection{Uruchamianie programu}
-Sk³adnia wywo³ania programu prezentuje siê nastêpuj¹co:
 
-\begin{verbatim}
-cdc-tool [opcja]... [KATALOG]
-\end{verbatim}
+Sk³adnia wywo³ania programu prezentuje siê nastêpuj±co:
+
+\begin{verbatim} cdc-tool [opcja]... [KATALOG] \end{verbatim}
 przy czym dostêpne opcje (w stylu \emph{GNU}) to:
 \begin{itemize}
-\item \texttt{-h}, \texttt{--help} -- wyœwietla pomoc programu
-\item \texttt{-V}, \texttt{--version} -- wyœwietla wersjê programu
-\item \texttt{-p}, \texttt{--print} -- w³¹cza drukowanie zale¿noœci
-\item \texttt{-r}, \texttt{--recursive} -- w³¹cza przegl¹danie rekursywne
-\item \texttt{-f}, \texttt{--files arg} -- umo¿liwia podanie \emph{wyra¿enia regularnego} dla nazw plików wejœciowych
+  \item \texttt{-h}, \texttt{--help} -- wy¶wietla pomoc programu
+  \item \texttt{-V}, \texttt{--version} -- wy¶wietla wersjê programu
+  \item \texttt{-p}, \texttt{--print} -- w³±cza drukowanie zale¿no¶ci
+  \item \texttt{-r}, \texttt{--recursive} -- w³±cza przegl±danie rekursywne
+  \item \texttt{-f}, \texttt{--files arg} -- umo¿liwia podanie
+        \emph{wyra¿enia regularnego} dla nazw plików wej¶ciowych
 \end{itemize}
 
-\subsection{Struktura rozwi¹zania}
-Szczegó³owa dokumentacja kodu programu znajduje siê w za³¹czonym pliku wygenerowanym przez narzêdzie \emph{doxygen}. Poni¿ej prezentujemy zatem jedynie krótkie podsumowanie architektury rozwi¹zania.
+\subsection{Struktura rozwi±zania}
 
-%TODO: tu siê chyba powinien wypowiedzieæ autor ;]
+Szczegó³owa dokumentacja kodu programu znajduje siê w za³±czonym pliku
+wygenerowanym przez narzêdzie \emph{doxygen}. Poni¿ej prezentujemy zatem
+jedynie krótkie podsumowanie architektury rozwi±zania.
 
 \section{Wybrane techniki programistyczne}
-Ostatecznie odeszliœmy od pomys³u wykorzystania jêzyka perl do analizy plików Ÿród³owych. Okaza³o siê bowiem, ¿e \texttt{boost::filesystem} i \texttt{boost::regex} w zupe³noœci wystarcz¹ do realizacji przegl¹dania kodu w poszukiwaniu dyrektyw \texttt{\#include}. Pierwsza z bibliotek dostarcza funkcji obs³uguj¹cych system plików, druga zaœ zapewnia interfejsy niezbêdne w trakcie korzystania z \emph{wyra¿eñ regularnych}.
 
-Ogólnie z programistycznego punktu widzenia projekt nasz charakteryzuje siê intensywnym wykorzystaniem bibliotek Boost. Poza wymienionymi ju¿ \texttt{filesystem} i \texttt{regex} wykorzystaliœmy \texttt{boost::bind} (w po³aczeniu z algorytmem \texttt{for\_each}) oraz sprytne wskaŸniki (\texttt{boost::shared\_ptr}). Godne uwagi jest zastosowanie wzorca strategii (zwanego te¿ czasem wzorcem polityki), dziêki któremu program mo¿na w przysz³oœci rozszerzyæ o dodatkowe funkcjonalnoœci. Aktualnie domyœlnym zachowaniem jest wyszukiwanie zale¿noœci cyklicznych, natomiast dziêki wykorzystaniu wzorca strategii ³atwo by³oby dodaæ np. modu³ wyszukuj¹cy nieu¿ywane pliki.
+Ostatecznie odeszli¶my od pomys³u wykorzystania jêzyka perl do analizy plików
+¼ród³owych. Okaza³o siê bowiem, ¿e \texttt{boost::filesystem}
+i \texttt{boost::regex} w zupe³no¶ci wystarcz± do realizacji przegl±dania kodu
+w poszukiwaniu dyrektyw \texttt{\#include}.  Pierwsza z bibliotek dostarcza
+funkcji obs³uguj±cych system plików, druga za¶ zapewnia interfejsy niezbêdne
+w trakcie korzystania z \emph{wyra¿eñ regularnych}.
 
-\section{Zarz¹dzanie projektem}
-Spektakularny sukces projektu nie by³by mo¿liwy gdyby nie wdro¿one mechanizmy zarz¹dzania przedsiêwziêciem. W naszym przypadku sprawdzi³y siê zarówno metody tradycyjne (podzia³ pracy, harmonogramowanie) jak i nowoczesne (rozproszone systemy kontroli wersji). Szczegó³ow¹ prezentacjê tych zagadnieñ zamieszczamy poni¿ej.
+Ogólnie z programistycznego punktu widzenia projekt nasz charakteryzuje siê
+intensywnym wykorzystaniem bibliotek Boost. Poza wymienionymi ju¿
+\texttt{filesystem} i \texttt{regex} wykorzystali¶my \texttt{boost::bind} (w
+po³±czeniu z algorytmem \texttt{for\_each}) oraz sprytne wska¼niki
+(\texttt{boost::shared\_ptr}). Godne uwagi jest zastosowanie wzorca strategii
+(zwanego te¿ czasem wzorcem polityki), dziêki któremu program mo¿na
+w przysz³o¶ci rozszerzyæ o dodatkowe funkcjonalno¶ci. Aktualnie domy¶lnym
+zachowaniem jest wyszukiwanie zale¿no¶ci cyklicznych, natomiast dziêki
+wykorzystaniu wzorca strategii ³atwo by³oby dodaæ np. modu³ wyszukuj±cy
+nieu¿ywane pliki.
 
-\subsection{Wersjonowanie kodu Ÿród³owego -- Git}
-Rozwa¿aliœmy zastosowanie kilku systemów kontroli wersji, lecz jedynymi powa¿nymi kandydatami by³y narzêdzia realizuj¹ce ideê \emph{rozproszonego systemu kontroli wersji}. Ostatecznie wybór pad³ na -- u¿ywanego m.in. do rozwoju j¹dra Linuksa -- \emph{Gita}. 
+\subsection{Wzorzec projektowy -- strategia}
+
+\begin{wrapfigure}{r}{0.5\textwidth}
+  \begin{center}
+    \includegraphics[width=0.48\textwidth]{StrategyPattern.eps}
+  \end{center}
+  \caption{\small Diagram klas dla wzorca strategii (¼ród³o:
+  en.wikipedia.org)}
+\end{wrapfigure}
+
+W fazie projektowania zauwa¿yli¶my, i¿ stworzona przez nas klasa
+\texttt{FilesDep} po wczytaniu zale¿no¶ci miêdzy plikami, generuje na ich
+podstawie graf, który nastêpnie u¿ywany jest w metodzie wyszukuj±cej cykle.
+Jednak¿e ów graf mo¿na wykorzystaæ tak¿e do detekcji innych niepo¿±danych
+typów zale¿no¶ci (wielokrotne w³±czanie, nieu¿ywane pliki). W wymaganiach
+podane mieli¶my tylko wyszukiwanie cykli, ale je¿eli program w przysz³o¶ci
+mia³by byæ rozwijany, warto umo¿liwiæ ³atwe dodawanie nowych
+funkcjonalno¶ci -- do tego celu idealnie nadaje siê \emph{wzorzec strategii}.
+
+Ów wzorzec pozwala w ³atwy sposób wybieraæ stosowany algorytm w czasie
+dzia³ania programu, dodatkowo tworzenie nowych algorytmów nie wymaga
+modyfikacji innych klasy -- to dok³adnie to czego potrzebujemy. Jego
+implementacja nie sprawia trudno¶ci, diagram klas pokazany jest na Rysunku 1.
+
+W naszym projekcie klasie \texttt{Context} odpowiada \texttt{FilesDep}.
+Dla konkretnych strategii definiujemy interfejs \texttt{Strategy} (u nas
+\texttt{DepCheckStrategy}) -- wska¼nik tego typu przechowuje
+\texttt{FilesDep}. W tym¿e interfejsie zdefiniowana jest metoda wirtualna,
+któr± implementuj± strategie konkretne -- u nas jest to
+\texttt{void check\_dep(const Graph\& deps)} -- jako argumenty przekazujemy
+potrzebne dla algorytmu dane. Co dalej siê stanie zale¿y ju¿ od wybranej
+strategii konkretnej (mo¿na je zmieniaæ w trakcie dzia³ania programu).
+
+Stworzyli¶my jedn± strategiê konkretn± \texttt{CircularStrategy}, która szuka
+cyklicznych zale¿no¶ci.
+
+\section{Zarz±dzanie projektem}
+
+Spektakularny sukces projektu nie by³by mo¿liwy gdyby nie wdro¿one mechanizmy
+zarz±dzania przedsiêwziêciem. W naszym przypadku sprawdzi³y siê zarówno metody
+tradycyjne (podzia³ pracy, harmonogramowanie) jak i nowoczesne (rozproszone
+systemy kontroli wersji).
+Szczegó³ow± prezentacjê tych zagadnieñ zamieszczamy poni¿ej.
+
+\subsection{Wersjonowanie kodu ¼ród³owego -- Git}
+
+Rozwa¿ali¶my zastosowanie kilku systemów kontroli wersji, lecz jedynymi
+powa¿nymi kandydatami by³y narzêdzia realizuj±ce ideê \emph{rozproszonego
+systemu kontroli wersji}.  Ostatecznie wybór pad³ na -- u¿ywanego m.in. do
+rozwoju j±dra Linuksa -- \emph{Gita}.
 
 \subsection{Automatyczna kompilacja -- SCons}
-Czêsto wykorzystywanym (szczególnie w systemach uniksowych) narzêdziem wspomagaj¹cym proces budowania oprogramowania jest narzêdzie \emph{make}. W naszym projekcie postanowiliœmy spróbowaæ czegoœ innego i wykorzystaæ \emph{SCons}. Na korzyœæ tego narzêdzia przemawia przede wszystkim fakt, i¿ jest ono oparte na \emph{prawdziwym} jêzyku programowania (na Pythonie) -- programista dostaje zatem znacznie wiêksze mo¿liwoœci konfiguracji i sprawdzon¹ sk³adniê.
+
+Czêsto wykorzystywanym (szczególnie w systemach uniksowych) narzêdziem
+wspomagaj±cym proces budowania oprogramowania jest narzêdzie \emph{make}.
+W naszym projekcie postanowili¶my spróbowaæ czego¶ innego i wykorzystaæ
+\emph{SCons}. Na korzy¶æ tego narzêdzia przemawia przede wszystkim fakt, i¿
+jest ono oparte na \emph{prawdziwym} jêzyku programowania (na Pythonie) --
+programista dostaje zatem znacznie wiêksze mo¿liwo¶ci konfiguracji
+i sprawdzon± sk³adniê.
 
 \subsection{Automatyczne generowanie dokumentacji -- doxygen}
-,,Dobrze udokumentowany kod obroni siê sam'' -- takie podejœcie staraliœmy siê zastosowaæ w trakcie pisania kodu programu. W zwi¹zku z tym komentarze spe³niaj¹ wymagania stawiane przez system \emph{doxygen}. Do poni¿szej dokumentacji za³¹czyliœmy efekt dzia³ania \emph{doxygena} (w postaci pliku pdf) na kodzie naszego projektu.
 
-\section{Przenoœnoœæ}
-Uda³o siê zapewniæ przenoœnoœæ kodu Ÿród³owego zgodnie z zamierzeniami wyra¿onymi w dokumentacji wstêpnej. Program bez ¿adnych modyfikacji kompiluje siê w dwóch wskazanych œrodowiskach:
+,,Dobrze udokumentowany kod obroni siê sam'' -- takie podej¶cie starali¶my siê
+zastosowaæ w trakcie pisania kodu programu. W zwi±zku z tym komentarze
+spe³niaj± wymagania stawiane przez system \emph{doxygen}. Do poni¿szej
+dokumentacji za³±czyli¶my efekt dzia³ania \emph{doxygena} (w postaci pliku
+pdf) na kodzie naszego projektu.
+
+\section{Przeno¶no¶æ}
+
+Uda³o siê zapewniæ przeno¶no¶æ kodu ¼ród³owego zgodnie z zamierzeniami
+wyra¿onymi w dokumentacji wstêpnej. Program bez ¿adnych modyfikacji kompiluje
+siê w dwóch wskazanych ¶rodowiskach:
+
 \begin{itemize}
-\item GNU Linux, kompilator \emph{gcc}
-\item Microsoft Windows, kompilator \emph{Visual C++}
+  \item GNU Linux, kompilator \emph{gcc}
+  \item Microsoft Windows, kompilator \emph{Visual C++}
 \end{itemize}
-Koniecznym okaza³o siê przygotowanie przenoœnego pliku \texttt{SConstruct} zawieraj¹cego nieco inne opcje kompilacji i nazwy bibliotek dla dwóch ró¿nych systemów operacyjnych. Szczególnie du¿e problemy sprawi³o napisanie prawid³owych poleceñ SCons dla systemu Windows. Ostatecznie podanie kompilatorowi opcji \verb \EHsc  (specyfikuj¹cej model ³apania wyj¹tków C/C++) umo¿liwi³o bezb³êdn¹ kompilacjê w Windows. Przy tej okazji dowiedzieliœmy siê o ciekawej mozliwoœci kompilatora \emph{Visual C++} -- narzêdzie to potrafi automatycznie (na podstawie dyrektyw \texttt{\#include}) do³¹czyæ niezbêdne biblioteki. St¹d w \texttt{SConstruct} zosta³y one pominiête.
 
-\section{Testy}
-\subsection{Testy manualne}
+Koniecznym okaza³o siê przygotowanie przeno¶nego pliku \texttt{SConstruct}
+zawieraj±cego nieco inne opcje kompilacji i nazwy bibliotek dla dwóch ró¿nych
+systemów operacyjnych.  Szczególnie du¿e problemy sprawi³o napisanie
+prawid³owych poleceñ SCons dla systemu Windows. Ostatecznie podanie
+kompilatorowi opcji \verb \EHsc (specyfikuj±cej model ³apania wyj±tków C/C++)
+umo¿liwi³o bezb³êdn± kompilacjê w Windows. Przy tej okazji dowiedzieli¶my siê
+o ciekawej mo¿liwo¶ci kompilatora \emph{Visual C++} -- narzêdzie to potrafi
+automatycznie (na podstawie dyrektyw \texttt{\#include}) do³±czyæ niezbêdne
+biblioteki. St±d w \texttt{SConstruct} zosta³y one pominiête.
+
+\section{Testy} \subsection{Testy manualne}
 
 \subsection{Testy automatyczne}
 
