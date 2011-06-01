@@ -76,6 +76,25 @@ Szczegó³owa dokumentacja kodu programu znajduje siê w za³±czonym pliku
 wygenerowanym przez narzêdzie \emph{doxygen}. Poni¿ej prezentujemy zatem
 jedynie krótkie podsumowanie architektury rozwi±zania.
 
+Osi± ca³ego programu jest klasa \texttt{FilesDep}, to w jej odpowiedzialno¶ci
+le¿y wczytanie zale¿no¶ci miêdzy plikami znajduj±cymi siê w podanym katalogu
+i wygenerowanie grafu na ich podstawie. Nastêpnie wywo³ywana jest metoda
+\texttt{check\_dep()} -- dziêki zastosowanemu wzorcowi projektowemu (o czym
+dalej) jej wykonaniem zajmuje siê ju¿ inna klasa -- jednak z punktu widzenia
+u¿ytkownika-programisty bezpo¶rednio interferuje siê tylko
+z \texttt{FilesDep}.
+
+Do znajdowania cyklicznych zale¿no¶ci u¿yli¶my algorytmu wyszukiwania
+\emph{silnie spójnych sk³adowych} zaimplementowanego w \emph{Boost Graph
+Library}. Silnie spójna sk³adowa to taka maksymalna spójna sk³adowa grafu,
+w której miêdzy ka¿dymi dwoma wierzcho³kami istnieje ¶cie¿ka -- co implikuje,
+¿e zawiera ona cykle. Jednocze¶nie, je¶li ka¿d± silnie spójn± sk³adow±
+zast±pimy wierzcho³kiem, to otrzymany graf jest acykliczny -- gdyby tak nie
+by³o nie by³yby to \textbf{maksymalne} spójne sk³adowe. Podsumowuj±c, szukanie
+cyklicznych zale¿no¶ci sprowadza siê do wyszukania silnie spójnych sk³adowych,
+nastêpnie wystarczy odrzuciæ sk³adowe jedno elementowe, to co zostanie to
+grupy wierzcho³ków, miêdzy którymi istniej± cykliczne zale¿no¶ci.
+
 \section{Wybrane techniki programistyczne}
 
 Ostatecznie odeszli¶my od pomys³u wykorzystania jêzyka perl do analizy plików
@@ -88,13 +107,13 @@ w trakcie korzystania z \emph{wyra¿eñ regularnych}.
 Ogólnie z programistycznego punktu widzenia projekt nasz charakteryzuje siê
 intensywnym wykorzystaniem bibliotek Boost. Poza wymienionymi ju¿
 \texttt{filesystem} i \texttt{regex} wykorzystali¶my \texttt{boost::bind} (w
-po³±czeniu z algorytmem \texttt{for\_each}) oraz sprytne wska¼niki
-(\texttt{boost::shared\_ptr}). Godne uwagi jest zastosowanie wzorca strategii
-(zwanego te¿ czasem wzorcem polityki), dziêki któremu program mo¿na
-w przysz³o¶ci rozszerzyæ o dodatkowe funkcjonalno¶ci. Aktualnie domy¶lnym
-zachowaniem jest wyszukiwanie zale¿no¶ci cyklicznych, natomiast dziêki
-wykorzystaniu wzorca strategii ³atwo by³oby dodaæ np. modu³ wyszukuj±cy
-nieu¿ywane pliki.
+po³±czeniu z algorytmem \texttt{for\_each}), sprytne wska¼niki
+(\texttt{boost::shared\_ptr}) oraz \texttt{boost::program\_options} (obs³uga
+opcji wywo³ania). Godne uwagi jest zastosowanie wzorca strategii (zwanego te¿
+czasem wzorcem polityki), dziêki któremu program mo¿na w przysz³o¶ci
+rozszerzyæ o dodatkowe funkcjonalno¶ci. Aktualnie domy¶lnym zachowaniem jest
+wyszukiwanie zale¿no¶ci cyklicznych, natomiast dziêki wykorzystaniu wzorca
+strategii ³atwo by³oby dodaæ np. modu³ wyszukuj±cy nieu¿ywane pliki.
 
 \subsection{Wzorzec projektowy -- strategia}
 
@@ -130,7 +149,8 @@ potrzebne dla algorytmu dane. Co dalej siê stanie zale¿y ju¿ od wybranej
 strategii konkretnej (mo¿na je zmieniaæ w trakcie dzia³ania programu).
 
 Stworzyli¶my jedn± strategiê konkretn± \texttt{CircularStrategy}, która szuka
-cyklicznych zale¿no¶ci.
+cyklicznych zale¿no¶ci. Napisali¶my równie¿ szablon nowej strategii, na
+podstawie którego mo¿na ³atwo stworzyæ w³asn± strategiê konkretn±.
 
 \section{Zarz±dzanie projektem}
 
@@ -186,9 +206,28 @@ o ciekawej mo¿liwo¶ci kompilatora \emph{Visual C++} -- narzêdzie to potrafi
 automatycznie (na podstawie dyrektyw \texttt{\#include}) do³±czyæ niezbêdne
 biblioteki. St±d w \texttt{SConstruct} zosta³y one pominiête.
 
-\section{Testy} \subsection{Testy manualne}
+\section{Testy}
+
+\subsection{Testy manualne}
+
+Do testów manualnych stworzyli¶my szereg przyk³adowych katalogów projektów --
+znajduj± siê one w katalogu \texttt{test/}. W ka¿dym katalogu znajduje siê
+plik \texttt{CORRECT}, który zawiera poprawny tekst generowany przez program.
+W ka¿dym wypadku program by³ wywo³ywany z opcj± \texttt{-p}, a dla katalogu
+\texttt{test/recursive/} dodatkowo z \texttt{-r} (choæ ta mo¿e równie¿ byæ
+u¿yta w ka¿dym innym, ale w tym jednym musi).
 
 \subsection{Testy automatyczne}
+
+Przy pomocy \emph{Boost Unit Test Framework} napisali¶my równie¿ testy
+automatyczne dla poszczególnych klas.
+
+\emph{Uwaga! Programy testowe analizuj± wyj¶cie programu. Ze wzglêdu na ró¿n±
+kolejno¶æ przegl±dania plików w katalogach w ró¿nych systemach operacyjnych
+czy systemach plików, wyj¶cie programu mo¿e ró¿niæ siê od tego wymaganego
+przez program czy podanego w pliku \texttt{CORRECT} -- chocia¿ nadal
+pozostanie poprawne (zamieniona zostanie jedynie kolejno¶æ plików na listach
+cykli).}
 
 \end{document}
 
