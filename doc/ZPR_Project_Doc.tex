@@ -36,10 +36,31 @@ preprocesora \verb|#include "nazwa"| i na ich podstawie zbudowaæ graf
 wygenerowaæ odpowiedni komunikat.
 
 \section{Zrealizowana funkcjonalnoœæ}
-Uda³o siê zrealizowaæ wszystko, co chcieliœmy.
+Ostateczna wersja projektu uwzglêdnia wszystkie funkcjonalnoœci wymienione w dokumentacji wstêpnej. Program poprawnie wyszukuje cykliczne zale¿noœci, choæ konieczne by³o wprowadzenie dodatkowych za³o¿eñ, o których póŸniej.
 
-\section{Struktura rozwi¹zania}
+Projekt uda³o siê zamkn¹æ w terminie, jednoczeœnie realizuj¹c pe³n¹ funkcjonalnoœæ systemu. Bezpiecznie mo¿na zatem za³o¿yæ, ¿e dzia³alnoœæ zakoñczy³a siê spektakularnym sukcesem, co nie jest szczególnie powszechnym zjawiskiem w bran¿y IT.
 
+\section{Dokumentacja techniczna}
+W poni¿szej sekcji przedstawiamy szczegó³y techniczne zwi¹zane z budow¹ i uruchamianiem aplikacji.
+
+\subsection{Uruchamianie programu}
+Sk³adnia wywo³ania programu prezentuje siê nastêpuj¹co:
+
+\begin{verbatim}
+cdc-tool [opcja]... [KATALOG]
+\end{verbatim}
+przy czym dostêpne opcje (w stylu \emph{GNU}) to:
+\begin{itemize}
+\item \texttt{-h}, \texttt{--help} -- wyœwietla pomoc programu
+\item \texttt{-V}, \texttt{--version} -- wyœwietla wersjê programu
+\item \texttt{-p}, \texttt{--print} -- w³¹cza drukowanie zale¿noœci
+\item \texttt{-r}, \texttt{--recursive} -- w³¹cza przegl¹danie rekursywne
+\item \texttt{-f}, \texttt{--files arg} -- umo¿liwia podanie \emph{wyra¿enia regularnego} dla nazw plików wejœciowych
+\end{itemize}
+
+
+
+\subsection{Struktura rozwi¹zania}
 
 \section{Wybrane techniki programistyczne}
 Ostatecznie odeszliœmy od pomys³u wykorzystania jêzyka perl do analizy plików Ÿród³owych. Okaza³o siê bowiem, ¿e \texttt{boost::filesystem} i \texttt{boost::regex} w zupe³noœci wystarcz¹ do realizacji przegl¹dania kodu w poszukiwaniu dyrektyw \texttt{\#include}. Pierwsza z bibliotek dostarcza funkcji obs³uguj¹cych system plików, druga zaœ zapewnia interfejsy niezbêdne w trakcie korzystania z \emph{wyra¿eñ regularnych}.
