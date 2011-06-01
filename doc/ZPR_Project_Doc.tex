@@ -58,26 +58,35 @@ przy czym dostêpne opcje (w stylu \emph{GNU}) to:
 \item \texttt{-f}, \texttt{--files arg} -- umo¿liwia podanie \emph{wyra¿enia regularnego} dla nazw plików wejœciowych
 \end{itemize}
 
-
-
 \subsection{Struktura rozwi¹zania}
+Szczegó³owa dokumentacja kodu programu znajduje siê w za³¹czonym pliku wygenerowanym przez narzêdzie \emph{doxygen}. Poni¿ej prezentujemy zatem jedynie krótkie podsumowanie architektury rozwi¹zania.
+
+%TODO: tu siê chyba powinien wypowiedzieæ autor ;]
 
 \section{Wybrane techniki programistyczne}
 Ostatecznie odeszliœmy od pomys³u wykorzystania jêzyka perl do analizy plików Ÿród³owych. Okaza³o siê bowiem, ¿e \texttt{boost::filesystem} i \texttt{boost::regex} w zupe³noœci wystarcz¹ do realizacji przegl¹dania kodu w poszukiwaniu dyrektyw \texttt{\#include}. Pierwsza z bibliotek dostarcza funkcji obs³uguj¹cych system plików, druga zaœ zapewnia interfejsy niezbêdne w trakcie korzystania z \emph{wyra¿eñ regularnych}.
 
-Ogólnie z programistycznego punktu widzenia projekt nasz charakteryzuje siê intensywnym wykorzystaniem bibliotek Boost. Poza wymienionymi ju¿ \texttt{filesystem} i \texttt{regex} wykorzystaliœmy \texttt{boost::bind} (w po³aczeniu z algorytmem \texttt{for\_each}) oraz sprytne wskaŸniki (\texttt{boost::shared\_ptr}). 
+Ogólnie z programistycznego punktu widzenia projekt nasz charakteryzuje siê intensywnym wykorzystaniem bibliotek Boost. Poza wymienionymi ju¿ \texttt{filesystem} i \texttt{regex} wykorzystaliœmy \texttt{boost::bind} (w po³aczeniu z algorytmem \texttt{for\_each}) oraz sprytne wskaŸniki (\texttt{boost::shared\_ptr}). Godne uwagi jest zastosowanie wzorca strategii (zwanego te¿ czasem wzorcem polityki), dziêki któremu program mo¿na w przysz³oœci rozszerzyæ o dodatkowe funkcjonalnoœci. Aktualnie domyœlnym zachowaniem jest wyszukiwanie zale¿noœci cyklicznych, natomiast dziêki wykorzystaniu wzorca strategii ³atwo by³oby dodaæ np. modu³ wyszukuj¹cy nieu¿ywane pliki.
 
 \section{Zarz¹dzanie projektem}
 Spektakularny sukces projektu nie by³by mo¿liwy gdyby nie wdro¿one mechanizmy zarz¹dzania przedsiêwziêciem. W naszym przypadku sprawdzi³y siê zarówno metody tradycyjne (podzia³ pracy, harmonogramowanie) jak i nowoczesne (rozproszone systemy kontroli wersji). Szczegó³ow¹ prezentacjê tych zagadnieñ zamieszczamy poni¿ej.
 
 \subsection{Wersjonowanie kodu Ÿród³owego -- Git}
+Rozwa¿aliœmy zastosowanie kilku systemów kontroli wersji, lecz jedynymi powa¿nymi kandydatami by³y narzêdzia realizuj¹ce ideê \emph{rozproszonego systemu kontroli wersji}. Ostatecznie wybór pad³ na -- u¿ywanego m.in. do rozwoju j¹dra Linuksa -- \emph{Gita}. 
 
 \subsection{Automatyczna kompilacja -- SCons}
+Czêsto wykorzystywanym (szczególnie w systemach uniksowych) narzêdziem wspomagaj¹cym proces budowania oprogramowania jest narzêdzie \emph{make}. W naszym projekcie postanowiliœmy spróbowaæ czegoœ innego i wykorzystaæ \emph{SCons}. Na korzyœæ tego narzêdzia przemawia przede wszystkim fakt, i¿ jest ono oparte na \emph{prawdziwym} jêzyku programowania (na Pythonie) -- programista dostaje zatem znacznie wiêksze mo¿liwoœci konfiguracji i sprawdzon¹ sk³adniê.
 
 \subsection{Automatyczne generowanie dokumentacji -- doxygen}
+,,Dobrze udokumentowany kod obroni siê sam'' -- takie podejœcie staraliœmy siê zastosowaæ w trakcie pisania kodu programu. W zwi¹zku z tym komentarze spe³niaj¹ wymagania stawiane przez system \emph{doxygen}. Do poni¿szej dokumentacji za³¹czyliœmy efekt dzia³ania \emph{doxygena} (w postaci pliku pdf) na kodzie naszego projektu.
 
 \section{Przenoœnoœæ}
-Rzecz dzia³a w Windows i w Linux, kompiluje siê zarówno pod gcc jak i pod vc2010. Realizacja poprzez SCons.
+Uda³o siê zapewniæ przenoœnoœæ kodu Ÿród³owego zgodnie z zamierzeniami wyra¿onymi w dokumentacji wstêpnej. Program bez ¿adnych modyfikacji kompiluje siê w dwóch wskazanych œrodowiskach:
+\begin{itemize}
+\item GNU Linux, kompilator \emph{gcc}
+\item Microsoft Windows, kompilator \emph{Visual C++}
+\end{itemize}
+Koniecznym okaza³o siê przygotowanie przenoœnego pliku \texttt{SConstruct} zawieraj¹cego nieco inne opcje kompilacji i nazwy bibliotek dla dwóch ró¿nych systemów operacyjnych. Szczególnie du¿e problemy sprawi³o napisanie prawid³owych poleceñ SCons dla systemu Windows. Ostatecznie podanie kompilatorowi opcji \verb \EHsc  (specyfikuj¹cej model ³apania wyj¹tków C/C++) umo¿liwi³o bezb³êdn¹ kompilacjê w Windows. Przy tej okazji dowiedzieliœmy siê o ciekawej mozliwoœci kompilatora \emph{Visual C++} -- narzêdzie to potrafi automatycznie (na podstawie dyrektyw \texttt{\#include}) do³¹czyæ niezbêdne biblioteki. St¹d w \texttt{SConstruct} zosta³y one pominiête.
 
 \section{Testy}
 \subsection{Testy manualne}
