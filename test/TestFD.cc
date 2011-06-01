@@ -38,6 +38,7 @@ BOOST_AUTO_TEST_CASE(NotInitialized)
     BOOST_REQUIRE_THROW(fd.check_dep(), FilesDep::StrategyNotSet);
 }
 
+#ifndef _WIN32
 BOOST_AUTO_TEST_CASE(NoPerm)
 {
     FilesDep fd;
@@ -61,6 +62,7 @@ BOOST_AUTO_TEST_CASE(NoPerm)
 
     cerr.rdbuf(backup);
 }
+#endif
 
 BOOST_AUTO_TEST_CASE(Project)
 {
