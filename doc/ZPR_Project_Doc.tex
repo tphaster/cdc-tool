@@ -14,7 +14,7 @@
 \title{
     \textbf{Zaawansowane programowanie w C++ \\ Projekt} \\
     {\normalsize<<Narzêdzie do znajdowania cyklicznych zale¿no¶ci pomiêdzy plikami>>
-        \\ \small Dokumentacja koñcowa}
+        \\ \normalsize >>Dokumentacja koñcowa<<}
 }
 
 \author{
@@ -205,6 +205,30 @@ umo¿liwi³o bezb³êdn± kompilacjê w Windows. Przy tej okazji dowiedzieli¶my siê
 o ciekawej mo¿liwo¶ci kompilatora \emph{Visual C++} -- narzêdzie to potrafi
 automatycznie (na podstawie dyrektyw \texttt{\#include}) do³±czyæ niezbêdne
 biblioteki. St±d w \texttt{SConstruct} zosta³y one pominiête.
+
+W trakcie implementacji napotkali¶my problem zwi±zany z przeno¶no¶ci±, który
+zmusi³ na do na³o¿enia pewnych ograniczeñ na nasz program. Chodzi
+o identyfikacjê plików w projektach zawieraj±cych podkatalogi, naturalnym
+rozwi±zaniem jest u¿ycie wzglêdnej ¶cie¿ki do pliku wzglêdem g³ównego katalogu
+projektu -- tak te¿ zrobili¶my. Je¶li teraz rozwa¿ymy w jaki sposób mo¿na
+podawaæ pliki w dyrektywach \texttt{\#include}, pojawia siê problem -- bowiem
+mo¿e to byæ zarówno ¶cie¿ka bezwzglêdna, jak i wzglêdna wraz ze wszystkimi
+mo¿liwymi wariacjami u¿ywaj±c nazw katalogu bie¿±cego (\texttt{.})
+i nadrzêdnego (\texttt{..}). Dodatkowo sprawê komplikuje mo¿liwo¶æ podania
+kompilatorowi katalogu z plikami do za³±czania oraz linki symboliczne i twarde.
+Przyk³adowo zapisy: \texttt{include/plik.h}, \texttt{../include/plik.h},
+\texttt{.././include/plik.h} \texttt{plik.h},
+\texttt{../../projekt/include/plik.h} oraz \texttt{../link\_sym.h} mog±
+wskazywaæ ten sam plik. Niestety \texttt{boost::filesystem} nie udostêpnia
+w u¿ywanej przez nas wersji przeno¶nych funkcji pozwalaj±cych rozpl±tywaæ
+tego typu ¶cie¿ki.
+
+Jako ¿e tematem projektu by³o wyszukiwanie cyklicznych zale¿no¶ci, a nie
+analizowanie struktury katalogów w systemach plików przyjêli¶my nastêpuj±ce
+za³o¿enie: \\
+\emph{Aby program poprawnie identyfikowa³ pliki w dyrektywach
+\texttt{\#include} musz± byæ podane ¶cie¿ki wzglêdne do plików wzglêdem
+g³ównego katalogu projektu.}
 
 \section{Testy}
 
