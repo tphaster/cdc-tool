@@ -67,20 +67,25 @@ BOOST_AUTO_TEST_CASE(NoPerm)
 BOOST_AUTO_TEST_CASE(Project)
 {
     FilesDep fd;
-    string correct_output[] = {
+    const int len = 13;
+    /* The order of lines in the output depends on how they
+     * are written on your hard drive -- corrections may
+     * be needed
+     */
+    string correct_output[len] = {
         "Detected file dependencies...",
+        "h2.h -> h1.h",
+        "h1.h -> h2.h",
+        "blah.h -> AnotherClass.hpp",
         "blah.c -> AnotherClass.hpp",
         "blah.c -> blah.h",
-        "h2.h -> h1.h",
-        "test.c -> header.h",
-        "test.c -> SomeClass.hpp",
-        "AnotherClass.hpp -> SomeClass.hpp",
         "SomeClass.hpp -> blah.h",
         "SomeClass.hpp -> header.h",
-        "blah.h -> AnotherClass.hpp",
         "main.cc -> AnotherClass.hpp",
         "main.cc -> header.h",
-        "h1.h -> h2.h"
+        "test.c -> header.h",
+        "test.c -> SomeClass.hpp",
+        "AnotherClass.hpp -> SomeClass.hpp"
     };
 
     stringstream redirectStream;
@@ -111,6 +116,8 @@ BOOST_AUTO_TEST_CASE(Project)
         BOOST_CHECK(str == correct_output[i]);
         str.clear();
         ++i;
+        if (i < len)
+            break;
     }
 
     cout.rdbuf(backup);
@@ -119,20 +126,25 @@ BOOST_AUTO_TEST_CASE(Project)
 BOOST_AUTO_TEST_CASE(Recursive)
 {
     FilesDep fd;
-    string correct_output[] = {
+    const int len = 13;
+    /* The order of lines in the output depends on how they
+     * are written on your hard drive -- corrections may
+     * be needed
+     */
+    string correct_output[len] = {
         "Detected file dependencies...",
-        "h2.h -> blah/h1.h",
-        "blah/AnotherClass.hpp -> blah/SomeClass.hpp",
-        "blah/some.h -> blah/AnotherClass.hpp",
-        "blah/SomeClass.hpp -> blah/some.h",
-        "blah/SomeClass.hpp -> header.h",
-        "blah/h1.h -> h2.h",
-        "test.c -> header.h",
-        "test.c -> blah/SomeClass.hpp",
-        "main.cc -> blah/AnotherClass.hpp",
-        "main.cc -> header.h",
         "some.c -> blah/AnotherClass.hpp",
         "some.c -> blah/some.h"
+        "h2.h -> blah/h1.h",
+        "blah/some.h -> blah/AnotherClass.hpp",
+        "blah/h1.h -> h2.h",
+        "blah/SomeClass.hpp -> blah/some.h",
+        "blah/SomeClass.hpp -> header.h",
+        "blah/AnotherClass.hpp -> blah/SomeClass.hpp",
+        "main.cc -> blah/AnotherClass.hpp",
+        "main.cc -> header.h",
+        "test.c -> header.h",
+        "test.c -> blah/SomeClass.hpp",
     };
 
     BOOST_CHECK_NO_THROW(fd.load_dir(path("./recursive"), true));
@@ -151,6 +163,8 @@ BOOST_AUTO_TEST_CASE(Recursive)
         BOOST_CHECK(str == correct_output[i]);
         str.clear();
         ++i;
+        if (i < len)
+            break;
     }
 
     cout.rdbuf(backup);

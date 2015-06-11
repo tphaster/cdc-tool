@@ -43,7 +43,7 @@ void FilesDep::load_dir (const DirPath& dir, bool rec)
     else {
         for (fs::directory_iterator it(_dir), end; it != end; ++it) {
             /* filename identifies each file */
-            string fname = it->path().filename();
+            string fname = it->path().filename().string();
             if (fs::is_regular_file(it->path()) && regex_match(fname, _files)) {
                 _files_map.insert(FileDesc(fname, file_counter++));
             }

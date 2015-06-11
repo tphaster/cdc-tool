@@ -14,7 +14,7 @@ if (platform.system() == "Linux"):
     env_cs.Program('TestCS', src_cs)
 
     env_fd = env.Clone()
-    env_fd.Append(LIBS = Split('boost_regex boost_filesystem'))
+    env_fd.Append(LIBS = Split('boost_system boost_regex boost_filesystem'))
     env_fd.Program('TestFD', src_fd)
 elif (platform.system() == "Windows"):
 	env.Append(ENV = {'PATH' : os.environ['PATH']} )
